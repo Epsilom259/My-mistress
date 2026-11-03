@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سيدتك - Master AI</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap');
+
+        :root {
+            --primary: #ff0055; /* لون أحمر سادي */
+            --bg: #0f0f0f;
+            --card-bg: #1a1a1a;
+            --text: #e0e0e0;
+            --gold: #d4af37;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Tajawal', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 10px;
+        }
+
+        h1 {
+            margin: 0;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(255, 0, 85, 0.5);
+        }
+
+        .status-panel {
+            display: flex;
+            justify-content: space-between;
+            background: #222;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            border: 1px solid #333;
+        }
+
+        .mood-indicator {
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        #chat-box {
+            height: 500px;
+            overflow-y: auto;
+            padding: 15px;
+            background: var(--card-bg);
+            border-radius: 10px;
+            border: 1px solid #333;
+            margin-bottom: 20px;
+            box-shadow: inset 0 0 20px #000;
+        }
+
+        .message {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            line-height: 1.6;
+            position: relative;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .mistress-msg {
+            background: #2a1015;
+            border-right: 4px solid var(--primary);
+            color: #fff;
+        }
+
+        .mistress-msg.hard {
+            background: #3a0000;
+            border-right-color: #ff0000;
+        }
+
+        .mistress-msg.deep {
+            background: #1a1a2e;
+            border-right-color: #00d2ff;
+            border-left: 2px dashed #00d2ff;
+        }
+
+        .controls {
+            display: grid;
+            gap: 10px;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Tajawal';
+        }
+
+        .btn-main {
+            background: linear-gradient(45deg, #b8860b, #d4af37);
+            color: black;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-main:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5);
+        }
+
+        .btn-main:active {
+            transform: scale(0.98);
+        }
+
+        .btn-punish {
+            background: #333;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        .timer-bar {
+            height: 4px;
+            background: #333;
+            width: 100%;
+            margin-top: 10px;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .timer-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 100%;
+            transition: width 1s linear;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #111; }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 3px; }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>سيدتي الذكية</h1>
+        <div style="font-size: 0.8rem; color: #666;">v2.0 - Deep Control Mode</div>
+    </div>
+
+    <div class="status-panel">
+        <span id="timer-text">الوقت: 00:00</span>
+        <span id="mood-text" class="mood-indicator">المزاج: عادي</span>
+    </div>
+
+    <div id="chat-box">
+        <!-- الرسائل -->
+    </div>
+
+    <div class="controls">
+        <button id="btn-action" class="btn-main" onclick="executeCommand()">نفذ الأمر الآن يا عبد</button>
+        <button class="btn-punish" onclick="manualPunishment()">أنا أخطأت (عقّبني)</button>
+        <div class="timer-bar"><div id="timer-fill" class="timer-fill"></div></div>
+    </div>
+</div>
+
+<script>
+    // === قاعدة البيانات الضخمة للأوامر ===
+    
+    const insults = [
+        "يا خروف", "يا شرموط", "يا قحبة", "يا عاهر", "يا كلب", 
+        "يا حقير", "يا وحش", "يا عبد بلا قيمة", "يا دنيء", 
+        "يا مستحق الضرب", "يا بطل الهوى", "يا غبي الدماغ"
+    ];
+
+    const moods = {
+        calm: "هادئة",
+        dominant: "سيدة",
+        angry: "غاضبة",
+        sadistic: "ساديسية"
+    };
+
+    let currentMood = "calm";
+    let commandHistory = [];
+    let timerSeconds = 0;
+    let maxTimeBeforeAnger = 15; // ثانية قبل أن تبدأ بالغضب
+
+    // الأوامر العادية
+    const normalCommands = [
+        "قف واقفاً لمدة دقيقة كاملة دون تحريك ساقيك.",
+        "انظر إلى نفسك في المرآة وقل 'أنا عبد لسيدي' خمس مرات بصوت مسموع.",
+        "ضع يديك خلف ظهرك واجلس في زاوية الغرفة.",
+        "انزع ملابسك من الخصر لأعلى واترك الباب مفتوحاً.",
+        "خذ نفساً عميقاً واحبسه لمدة 10 ثوانٍ.",
+        "اصفع وجهك صفعة واحدة قوية الآن.",
+        "ارفع يديك للأعلى واجعلهما ترتعشان.",
+        "امشِ مثل الدجاجة (على أصابع قدميك) حول الغرفة مرتين."
+    ];
+
+    // الأوامر السادية الجسدية (التعميق)
+    const deepCommands = [
+        "أدخل إصبعك في مؤخرك الآن، واضغط بقوة لمدة 30 ثانية وأنت تنظر إليّ.",
+        "أدخل إصبعك ببطء، ثم اضغط على فتحتك أثناء حبس أنفاسك.",
+        "أدخل إصبعك وحركه ببطء شديد، لا تخرج منه حتى آمر بذلك.",
+        "أدخل إصبعك بزاوية 45 درجة للخلف، واستمتع بالألم قليلاً.",
+        "أدخل إصبعك الآخر، وقم بعمل حركة دوران بطيئة.",
+        "أدخل إصبعك، وتوقف عند أقصى نقطة، وارتعش مع الألم.",
+        "أدخل إصبعك وابقَ فيه ثابتاً تماماً لمدة دقيقة كاملة."
+    ];
+
+    const punishments = [
+        "20 قرفصعة الآن! بسرعة!",
+        "اضرب مؤخرتك 10 ضربات قوية.",
+        "قف في الزاوية لمدة دقيقتين.",
+        "انزع جواربك وارميها خارج النافذة.",
+        "جلوس على الأرض بدون وسادة لمدة 5 دقائق."
+    ];
+
+    // === محرك الذكاء الاصطناعي ===
+
+    function getRandomItem(arr) {
+        return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function getInsult() {
+        return getRandomItem(insults);
+    }
+
+    function updateMood(isLate) {
+        if (isLate) {
+            currentMood = "sadistic";
+            document.getElementById('mood-text').innerText = "المزاج: ساديسية";
+            document.getElementById('mood-text').style.color = "#ff0000";
+        } else {
+            // Random mood shift based on time
+            if (Math.random() > 0.7) currentMood = "dominant";
+            else currentMood = "calm";
+            
+            document.getElementById('mood-text').innerText = `المزاج: ${moods[currentMood]}`;
+            document.getElementById('mood-text').style.color = "#d4af37";
+        }
+    }
+
+    function generateCommand() {
+        let isDeep = Math.random() > 0.6; // 40% chance for deep commands
+        let insult = getInsult();
+        let baseCmd = "";
+        let extra = "";
+
+        if (currentMood === "sadistic") {
+            baseCmd = getRandomItem(punishments);
+            extra = "لا تقاطعني وأنت تفعل ذلك.";
+        } else if (isDeep) {
+            baseCmd = getRandomItem(deepCommands);
+            extra = "لا تحرك إصبعك إلا بأمر مني.";
+        } else {
+            baseCmd = getRandomItem(normalCommands);
+            extra = "هل فهمت أم دماغك فارغ؟";
+        }
+
+        return {
+            text: `${insult}، ${baseCmd} ${extra}`,
+            type: currentMood === "sadistic" ? "hard" : (isDeep ? "deep" : "normal"),
+            mood: currentMood
+        };
+    }
+
+    // === واجهة المستخدم والمنطق ===
+
+    const chatBox = document.getElementById('chat-box');
+    const timerFill = document.getElementById('timer-fill');
+    const timerText = document.getElementById('timer-text');
+    let startTime = Date.now();
+
+    function addMessage(text, type) {
+        const div = document.createElement('div');
+        div.className = `message mistress-msg ${type}`;
+        div.innerHTML = text.replace(/\n/g, '<br>');
+        chatBox.appendChild(div);
+        chatBox.scrollTop = chatBox.scrollHeight;
+        
+        // Sound effect simulation (optional visual cue)
+        if(type === 'hard') {
+            div.style.animation = "fadeIn 0.2s ease";
+        }
+    }
+
+    function startTimer() {
+        setInterval(() => {
+            let now = Date.now();
+            let diff = Math.floor((now - startTime) / 1000);
+            
+            // Update Text
+            let mins = Math.floor(diff / 60);
+            let secs = diff % 60;
+            timerText.innerText = `الوقت: ${mins}:${secs < 10 ? '0'+secs : secs}`;
+
+            // Update Bar (Reset every 30 seconds visually, logic handled in action)
+            let percentage = 100 - ((diff % 30) / 30 * 100);
+            timerFill.style.width = percentage + "%";
+
+            // Check Anger Logic
+            if (diff > maxTimeBeforeAnger && currentMood !== "sadistic") {
+                // Auto trigger a warning if too long without interaction
+                if (diff > maxTimeBeforeAnger + 5) {
+                    // Optional: Auto message if user is idle
+                }
+            }
+        }, 1000);
+    }
+
+    function executeCommand() {
+        // Reset Timer
+        startTime = Date.now();
+        updateMood(false);
+
+        // Generate Command
+        let cmdData = generateCommand();
+        addMessage(cmdData.text, cmdData.type);
+
+        // Button Feedback
+        let btn = document.getElementById('btn-action');
+        btn.innerText = "...أنت تحت الأمر";
+        btn.disabled = true;
+        setTimeout(() => {
+            btn.innerText = "نفذ الأمر الآن يا عبد";
+            btn.disabled = false;
+        }, 2000);
+    }
+
+    function manualPunishment() {
+        startTime = Date.now();
+        updateMood(true); // Force Sadistic Mood
+        let pun = getRandomItem(punishments);
+        addMessage(`لأنك طلبت العقاب يا ${getInsult()}... \n\n${pun}`, "hard");
+    }
+
+    // Initialize
+    window.onload = function() {
+        addMessage("أهلاً بك يا <strong>" + getInsult() + "</strong>.<br>الآن أنت متصل بسيرفر سيدتي.<br>الأوامر ستصلك فوراً. لا تتأخر.<br><br>أول أمر: اخلع حذاءك وجلس منتصباً.", "normal");
+        startTimer();
+    };
+
+</script>
+
+</body>
+</html>
