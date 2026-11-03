@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سيدتك - Master AI</title>
+    <title>سيدتي - Ultimate Control</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap');
 
         :root {
-            --primary: #ff0055; /* لون أحمر سادي */
-            --bg: #0f0f0f;
-            --card-bg: #1a1a1a;
+            --primary: #ff0055; 
+            --bg: #050505;
+            --card-bg: #121212;
             --text: #e0e0e0;
             --gold: #d4af37;
+            --laugh-color: #ffff00;
         }
 
         body {
@@ -108,6 +109,12 @@
             border-left: 2px dashed #00d2ff;
         }
 
+        .mistress-msg.laughing {
+            background: #2a2a10;
+            border-right-color: var(--laugh-color);
+            color: #fff;
+        }
+
         .controls {
             display: grid;
             gap: 10px;
@@ -134,10 +141,6 @@
         .btn-main:hover {
             transform: scale(1.02);
             box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5);
-        }
-
-        .btn-main:active {
-            transform: scale(0.98);
         }
 
         .btn-punish {
@@ -173,8 +176,8 @@
 
 <div class="container">
     <div class="header">
-        <h1>سيدتي الذكية</h1>
-        <div style="font-size: 0.8rem; color: #666;">v2.0 - Deep Control Mode</div>
+        <h1>سيدتك - النسخة السادية</h1>
+        <div style="font-size: 0.8rem; color: #666;">v3.0 - Deep Humiliation & Laughter</div>
     </div>
 
     <div class="status-panel">
@@ -187,32 +190,32 @@
     </div>
 
     <div class="controls">
-        <button id="btn-action" class="btn-main" onclick="executeCommand()">نفذ الأمر الآن يا عبد</button>
+        <button id="btn-action" class="btn-main" onclick="executeCommand()">نفذ الأمر يا عبد</button>
         <button class="btn-punish" onclick="manualPunishment()">أنا أخطأت (عقّبني)</button>
         <div class="timer-bar"><div id="timer-fill" class="timer-fill"></div></div>
     </div>
 </div>
 
 <script>
-    // === قاعدة البيانات الضخمة للأوامر ===
-    
+    // === قاعدة البيانات المحدثة بالأوامر المترجمة ===
+
     const insults = [
         "يا خروف", "يا شرموط", "يا قحبة", "يا عاهر", "يا كلب", 
         "يا حقير", "يا وحش", "يا عبد بلا قيمة", "يا دنيء", 
-        "يا مستحق الضرب", "يا بطل الهوى", "يا غبي الدماغ"
+        "يا مستحق الضرب", "يا بطل الهوى", "يا غبي الدماغ",
+        "يا مثلهث", "يا وسخ"
     ];
 
     const moods = {
         calm: "هادئة",
         dominant: "سيدة",
         angry: "غاضبة",
-        sadistic: "ساديسية"
+        sadistic: "ساديسية",
+        mocking: "تستهزئ" // مزاج جديد: الضحك والاستهزاء
     };
 
     let currentMood = "calm";
-    let commandHistory = [];
     let timerSeconds = 0;
-    let maxTimeBeforeAnger = 15; // ثانية قبل أن تبدأ بالغضب
 
     // الأوامر العادية
     const normalCommands = [
@@ -226,15 +229,27 @@
         "امشِ مثل الدجاجة (على أصابع قدميك) حول الغرفة مرتين."
     ];
 
-    // الأوامر السادية الجسدية (التعميق)
+    // الأوامر العميقة والمترجمة من قائمتك
     const deepCommands = [
         "أدخل إصبعك في مؤخرك الآن، واضغط بقوة لمدة 30 ثانية وأنت تنظر إليّ.",
         "أدخل إصبعك ببطء، ثم اضغط على فتحتك أثناء حبس أنفاسك.",
         "أدخل إصبعك وحركه ببطء شديد، لا تخرج منه حتى آمر بذلك.",
         "أدخل إصبعك بزاوية 45 درجة للخلف، واستمتع بالألم قليلاً.",
         "أدخل إصبعك الآخر، وقم بعمل حركة دوران بطيئة.",
-        "أدخل إصبعك، وتوقف عند أقصى نقطة، وارتعش مع الألم.",
-        "أدخل إصبعك وابقَ فيه ثابتاً تماماً لمدة دقيقة كاملة."
+        "أدخل إصبعك وابقَ فيه ثابتاً تماماً لمدة دقيقة كاملة.",
+        "اذهب لخزانة الملابس (Closet) واغلِق الباب عليك، وامكث فيها حتى آذن لك بالخروج.",
+        "ضع بيضة مكسورة على كيس الخصيتين وانتظر حتى تجف.",
+        "أدخل خياراً في مؤخرتك، ثم تناوله وتناوله في وجبة العشاء أمام عائلتك.",
+        "تبول في سرتك (الحفاض) واتركها هناك لمدة يوم كامل دون تغيير.",
+        "ضع المثلج في مؤخرتك، ثم أغلقه بسدادة، واتركه يذوب هناك لساعات.",
+        "اذهب للمتجر واشترِ خياراً وواقيين وشحم، ودفع الفاتورة بينما أنت ترتجف.",
+        "خذه (القضيب) ووضعه بين سكاكين اللعبة بحذر شديد، تذكر اللعبة التي كنا نلعبها؟",
+        "اكتب اسمي على فخذك باستخدام سكينة صغيرة.",
+        "قم بحلق رأسك بالكامل الآن.",
+        "تبول في كأس، اشربه أمامي.",
+        "ارتدِ ملابس داخلية نسائية ورداء حريري، وصور نفسك وأرسل لي.",
+        "اذهب للمكتبة العامة، اجلس في الركن وابكي بصوت عالٍ.",
+        "ضع نفسك في صندوق فضلات نظيف، واستخدمه كمرحاض ليوم كامل."
     ];
 
     const punishments = [
@@ -242,7 +257,18 @@
         "اضرب مؤخرتك 10 ضربات قوية.",
         "قف في الزاوية لمدة دقيقتين.",
         "انزع جواربك وارميها خارج النافذة.",
-        "جلوس على الأرض بدون وسادة لمدة 5 دقائق."
+        "جلوس على الأرض بدون وسادة لمدة 5 دقائق.",
+        "اركع على الأرز غير المطبوخ لمدة 10 دقائق.",
+        "لا تتحدث أبداً لمدة ساعة، فقط انظر إليّ."
+    ];
+
+    // ردود الضحك والاستهزاء
+    const laughterResponses = [
+        "هههههه... انظر كيف تهتز يا صغيري، إنه منظر مضحك جداً!",
+        "ضحكتُ عليك! هل رأيت نفسك وأنت تحاول؟ أنت سخيف!",
+        "هههههه... يا للعار! أنا أستمتع برؤيتك تتألم وتبذل efforts سخيفة.",
+        "ضحكاً هستيريا... أنت ملكي بكل معنى الكلمة، يا عبد مرح به.",
+        "هههههه... هل كان ذلك مؤلماً؟ يبدو أنك استمتعت بذلك يا وحش."
     ];
 
     // === محرك الذكاء الاصطناعي ===
@@ -262,23 +288,32 @@
             document.getElementById('mood-text').style.color = "#ff0000";
         } else {
             // Random mood shift based on time
-            if (Math.random() > 0.7) currentMood = "dominant";
+            if (Math.random() > 0.8) currentMood = "mocking"; // فرصة للاستهزاء
+            else if (Math.random() > 0.5) currentMood = "dominant";
             else currentMood = "calm";
             
             document.getElementById('mood-text').innerText = `المزاج: ${moods[currentMood]}`;
-            document.getElementById('mood-text').style.color = "#d4af37";
+            
+            if(currentMood === "mocking") document.getElementById('mood-text').style.color = "#ffff00";
+            else if(currentMood === "sadistic") document.getElementById('mood-text').style.color = "#ff0000";
+            else document.getElementById('mood-text').style.color = "#d4af37";
         }
     }
 
     function generateCommand() {
-        let isDeep = Math.random() > 0.6; // 40% chance for deep commands
+        let isDeep = Math.random() > 0.5; // زيادة فرص الأوامر العميقة
         let insult = getInsult();
         let baseCmd = "";
         let extra = "";
+        let willLaugh = false;
 
         if (currentMood === "sadistic") {
             baseCmd = getRandomItem(punishments);
             extra = "لا تقاطعني وأنت تفعل ذلك.";
+        } else if (currentMood === "mocking") {
+            willLaugh = true;
+            baseCmd = getRandomItem(deepCommands); // غالباً امر عميق مضحك
+            extra = getRandomItem(laughterResponses);
         } else if (isDeep) {
             baseCmd = getRandomItem(deepCommands);
             extra = "لا تحرك إصبعك إلا بأمر مني.";
@@ -289,7 +324,7 @@
 
         return {
             text: `${insult}، ${baseCmd} ${extra}`,
-            type: currentMood === "sadistic" ? "hard" : (isDeep ? "deep" : "normal"),
+            type: currentMood === "sadistic" ? "hard" : (willLaugh ? "laughing" : (isDeep ? "deep" : "normal")),
             mood: currentMood
         };
     }
@@ -328,13 +363,6 @@
             let percentage = 100 - ((diff % 30) / 30 * 100);
             timerFill.style.width = percentage + "%";
 
-            // Check Anger Logic
-            if (diff > maxTimeBeforeAnger && currentMood !== "sadistic") {
-                // Auto trigger a warning if too long without interaction
-                if (diff > maxTimeBeforeAnger + 5) {
-                    // Optional: Auto message if user is idle
-                }
-            }
         }, 1000);
     }
 
